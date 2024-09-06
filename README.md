@@ -82,10 +82,8 @@ It is recommended to create the generated dataset in the dataset folder, for exa
 ```
 ./dataset/
 ├── ...
-└── SemanticKitti/
-    ├── ...
-    ├── dataset-1f/
-    └── dataset-2f/
+├── dataset-1f/
+└── dataset-2f/
 ```
 
 ```shell script
