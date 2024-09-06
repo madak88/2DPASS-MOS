@@ -15,13 +15,17 @@ Our method can benefit from the semantic information without restricting categor
 
 We want to thank the original authors for their clear implementation and excellent work, which has greatly helped our project.
 
-ToDo: _Add demo videos_
+<p align="center">
+   <img src="figures/demo-1f.gif" width="40%"> 
+</p>
 
 ## How it works
 
 The model processes the LiDAR point clouds, which are then passed through two distinct paths. On one side, the data is fed into a moving object detection model, which leverages information from multiple frames simultaneously to generate more accurate predictions by capturing temporal dynamics. This enables the model to detect moving objects more accurately by considering their movement over time. In parallel, the point clouds are also passed through a semantic branch, where only a single scan is utilized to generate a detailed semantic prediction, classifying various elements in the scene. By combining the outputs from both the moving object detection and semantic segmentation branches, the network refines the detection of moving objects. It enhances the predictions by incorporating semantic information, which helps recover any missing points and provides more complete and reliable object segmentation.
 
-ToDo: _Add Figure_
+<p align="center">
+   <img src="figures/pipeline.png" width="90%"> 
+</p>
 
 ## Installation
 
