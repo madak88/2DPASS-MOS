@@ -1,0 +1,4 @@
+in_path: /home/ubuntu/downloads/kitti-stuff/datasets/calib-color-labels-velodyne_all/dataset/
+out_path: /home/ubuntu/extra-hdd/calib-color-labels-velodyne-2frame_tmp/dataset/
+merge_size: 2
+ds_type: test
