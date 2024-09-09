@@ -187,7 +187,7 @@ For further reference, the models used to obtain these results can be accessed [
 The first table presents a comparison of different models evaluated on the SemanticKITTI dataset, categorized into three distinct groups:
 
 - Models that **do not utilize ego-poses.**
-- Models that **utilize ego-poses with 2 frames.**
+- Models that **utilize ego-poses with 2 frames in real time.**
 - Models that **utilize ego-poses with multiple frames (n frames).**
 
 <table>
