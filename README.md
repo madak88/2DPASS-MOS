@@ -8,7 +8,7 @@ but during inference, the network performs segmentation on the clean LiDAR point
 We evaluate our approach on the SemanticKITTI and Apollo datasets, achieve state-of-the-art performance on moving object segmentation by utilizing only a few (even one) LIDAR frames, without any map building or even poses.
 
 Using just one scan already achieves remarkable results, but this method provides the possibility to use multiple LiDAR point clouds for both training and inference to extract additional moving information.
-One sweep-based MOS (without direct motion features) can be learned by interpretating the environmen, but We improve the state-of-the-art by adapting a multi-modal learning scheme and extending it by multi-frame instance segmentation.
+One sweep-based MOS (without direct motion features) can be learned by interpretating the environment, but We improve the state-of-the-art by adapting a multi-modal learning scheme and extending it by multi-frame instance segmentation.
 To create the multi-scan version of the network, the solution provided by the [4DMOS](https://github.com/PRBonn/4DMOS) was a great help during the implementation.
 We propose semantic information usage for multi-frame instance segmentation in order to enhance the performance measures.
 Our method can benefit from the semantic information without restricting categories by applying instance segmentation only as a refinement step.
@@ -124,10 +124,11 @@ By running the "02_run_2dpass-mos_test.sh" script, users can test the model. Thi
 <br/> - config/2DPASS-semantickitti.yaml for semantic segmentation
 
 - **Enter the model path:** _Location of the checkpoint_
-<br/> - models/model_2dpass-mos_frames-1_batch-8_epoch-64.ckpt for 1 frame pretrain model
-<br/> - models/model_2dpass-mos_frames-2_batch-4_epoch-64.ckpt for 2 frame pretrain model
+<br/> - models/model_2dpass-mos_frames-1_batch-8_epoch-64.ckpt for 1 frame pretrain model 
+<br/> - models/model_2dpass-mos_frames-2_batch-4_epoch-64.ckpt for 2 frame pretrain model 
 <br/> - models/model_2dpass-original.ckpt for semantic pretrain model
 <br/> - Your own trained models probablly in the logs folder
+<br/> (Link for the pretrain models in the Results section)
 
 - **Enter the TTA number:** _Number of views for the test-time-augmentation_
 <br/> - We set this value to 12 as default, and if you use other GPUs with smaller memory, you can choose a smaller value.
@@ -177,46 +178,149 @@ Finally, to standardize the results, you can run the "05_run_2dpass-mos_evaulate
 
 ## Results
 
+In this section, we provide a comprehensive analysis of model performance on two key datasets: SemanticKITTI and Apollo. The results are organized into multiple comparisons and an ablation study to highlight the influence of various components and approaches.
+
+For further reference, the models used to obtain these results can be accessed [here](https://drive.google.com/drive/folders/1rVil2iY6qmEFc0mDci62nVAH9OEyHC7d), and some of the listed predictions can be found [here](https://drive.google.com/drive/folders/1b58vPDAaxa__CFPl-ZMCROcOilxb6J9E).
+
 #### SemanticKITTI - Comparison
 
-|Method|Frames|mIoU (validation)|
-|:---:|:---:|:---:|
-|MInet|1|36.9%|
-|Rangenet++|1|39.5%|
-|4DMOS|5|39.9%|
-|LMNet|1|51.9%|
-|SalsaNext|1|53.4%|
-|**2DPASS-MOS (TTA=2, K=1)**|**1**|**64.1%**|
-||||
-||||
-|LMNet|2|56.0%|
-|LMNet (Residuals)|2|59.9%|
-|4DMOS|2|69.0%|
-|**2DPASS-MOS (TTA=1, K=2)**|**2**|**71.8%**|
-||||
-||||
-|InsMOS|5|60.8%|
-|LMNet (Semantics)|9|67.1%|
-|RVMOS|6|71.2%|
-|Motionseg3D|8|71.4%|
-|4DMOS|10|71.9%|
-|InsMOS|10|73.2%|
-|**2DPASS-MOS (TTA=12, K=2)**|**2**|**74.9%**|
-|MF-MOS|8|76.1|
-|**2DPASS-MOS (TTA=12, K=15)**|**2**|**78.5%**|
+The first table presents a comparison of different models evaluated on the SemanticKITTI dataset, categorized into three distinct groups:
+
+- Models that **do not utilize ego-poses.**
+- Models that **utilize ego-poses with 2 frames.**
+- Models that **utilize ego-poses with multiple frames (n frames).**
+
+<table>
+  <tr>
+    <th>Method</th>
+    <th>Frames</th>
+    <th>mIoU (validation)</th>
+  </tr>
+  <tr>
+    <td>MInet</td>
+    <td>1</td>
+    <td>36.9%</td>
+  </tr>
+  <tr>
+    <td>Rangenet++</td>
+    <td>1</td>
+    <td>39.5%</td>
+  </tr>
+  <tr>
+    <td>4DMOS</td>
+    <td>5</td>
+    <td>39.9%</td>
+  </tr>
+  <tr>
+    <td>LMNet</td>
+    <td>1</td>
+    <td>51.9%</td>
+  </tr>
+  <tr>
+    <td>SalsaNext</td>
+    <td>1</td>
+    <td>53.4%</td>
+  </tr>
+  <tr>
+    <td><b>2DPASS-MOS (TTA=2, K=1)</b></td>
+    <td><b>1</b></td>
+    <td><b>64.1%</b></td>
+  </tr>
+  <tr>
+    <td><b>2DPASS-MOS (TTA=12, K=1)</b></td>
+    <td><b>1</b></td>
+    <td><b>66.0%</b></td>
+  </tr>
+  <tr>
+    <td colspan="3"></td> <!-- Empty merged row -->
+  </tr>
+  <tr>
+    <td>LMNet</td>
+    <td>2</td>
+    <td>56.0%</td>
+  </tr>
+  <tr>
+    <td>LMNet (Residuals)</td>
+    <td>2</td>
+    <td>59.9%</td>
+  </tr>
+  <tr>
+    <td>4DMOS</td>
+    <td>2</td>
+    <td>69.0%</td>
+  </tr>
+  <tr>
+    <td><b>2DPASS-MOS (TTA=1, K=2)</b></td>
+    <td><b>2</b></td>
+    <td><b>71.8%</b></td>
+  </tr>
+  <tr>
+    <td colspan="3"></td> <!-- Empty merged row -->
+  </tr>
+  <tr>
+    <td>InsMOS</td>
+    <td>5</td>
+    <td>60.8%</td>
+  </tr>
+  <tr>
+    <td>LMNet (Semantics)</td>
+    <td>9</td>
+    <td>67.1%</td>
+  </tr>
+  <tr>
+    <td>RVMOS</td>
+    <td>6</td>
+    <td>71.2%</td>
+  </tr>
+  <tr>
+    <td>Motionseg3D</td>
+    <td>8</td>
+    <td>71.4%</td>
+  </tr>
+  <tr>
+    <td>4DMOS</td>
+    <td>10</td>
+    <td>71.9%</td>
+  </tr>
+  <tr>
+    <td>InsMOS</td>
+    <td>10</td>
+    <td>73.2%</td>
+  </tr>
+  <tr>
+    <td><b>2DPASS-MOS (TTA=12, K=2)</b></td>
+    <td><b>2</b></td>
+    <td><b>74.9%</b></td>
+  </tr>
+  <tr>
+    <td>MF-MOS</td>
+    <td>8</td>
+    <td>76.1%</td>
+  </tr>
+  <tr>
+    <td><b>2DPASS-MOS (TTA=12, K=15)</b></td>
+    <td><b>2</b></td>
+    <td><b>77.8%</b></td>
+  </tr>
+</table>
+
 
 #### SemanticKITTI - Ablation study
+
+The second table presents an ablation study on the SemanticKITTI validation dataset. This study examines the impact of various system components on model accuracy, providing insight into the contributions of specific features and techniques.
 
 |Frames|Semantics|mIoU (validation)|
 |:---:|:---:|:---:|
 |1|0|65.6%|
 |1|1|66.0%|
 |2|0|73.2%|
-|2|1|73.7%|
+|2|1|73.6%|
 |2|2|74.9%|
-|2|15|78.5%|
+|2|10|77.8%|
 
 #### Apollo - Comparison
+
+The final table offers a comparison of different models' accuracies on the Apollo dataset. This analysis further validates the performance of the models across different datasets and driving environments.
 
 |Method|Frames|mIoU (validation)|
 |:---:|:---:|:---:|
@@ -226,7 +330,7 @@ Finally, to standardize the results, you can run the "05_run_2dpass-mos_evaulate
 |MF-MOS (fine-tuned)|8|70.7|
 |4DMOS|10|73.1|
 |InsMOS|10|78.0|
-|2DPASS-MOS|2|80.5|
+|2DPASS-MOS|2|80.6|
 
 ## License
 This repository is released under MIT License (see LICENSE file for details).
