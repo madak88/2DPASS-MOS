@@ -298,7 +298,7 @@ The first table presents a comparison of different models evaluated on the Seman
     <td>76.1%</td>
   </tr>
   <tr>
-    <td><b>2DPASS-MOS (TTA=12, K=15)</b></td>
+    <td><b>2DPASS-MOS (TTA=12, K=10)</b></td>
     <td><b>2</b></td>
     <td><b>77.8%</b></td>
   </tr>
