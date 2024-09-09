@@ -2,7 +2,7 @@
 import os
 import argparse
 import numpy as np
-import open3d as o3d
+from dbscan import DBSCAN
 
 # Load ground truth poses from file.
 def load_poses(pose_path):
@@ -72,10 +72,8 @@ def file_paths(directory):
 def cluster(pred_lab_up, velo_data, mov_idx, sem_idx, min_distance, min_points, dyn_thresh_percent, thresh_point):
     if len(sem_idx) == 0: return pred_lab_up
     # Select the points of required class and cluster them based on distance
-    pt_cloud = o3d.geometry.PointCloud()
-    pt_cloud.points = o3d.utility.Vector3dVector(velo_data[sem_idx])
 
-    labels = np.array(pt_cloud.cluster_dbscan(eps=min_distance, min_points=min_points))
+    labels, core_samples_mask = DBSCAN(velo_data[sem_idx], eps=min_distance, min_samples=min_points)
     num_clusters = labels.max() + 1
 
     # Select each cluster and fit a cuboid to each cluster
@@ -103,6 +101,7 @@ def main(args):
     if ds_type == "sk-val":    split = [8]
     if ds_type == "sk-test":   split = [11,12,13,14,15,16,17,18,19,20,21]
     if ds_type == "sk-all":    split = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+
 
     for seq_i in split:
         print("SEQUENCE", seq_i)
@@ -151,25 +150,27 @@ def main(args):
             moving_idx = np.where(all_moving_data == 251)[0]
 
             car_idx = np.where(all_semantic_data == 10)[0]
-            #cycle_idx = np.where(all_semantic_data == 11)[0]
-            #cyclist_idx = np.where(all_semantic_data == 31)[0]
-            #mcycle_idx = np.where(all_semantic_data == 15)[0]
-            #mcyclist_idx = np.where(all_semantic_data == 32)[0]
-            #bus_idx = np.where(all_semantic_data == 13)[0]
-            #rails_idx = np.where(all_semantic_data == 16)[0]
-            #truck_idx = np.where(all_semantic_data == 18)[0]
-            #oth_idx = np.where(all_semantic_data == 20)[0]
+            cycle_idx = np.where(all_semantic_data == 11)[0]
+            cyclist_idx = np.where(all_semantic_data == 31)[0]
+            mcycle_idx = np.where(all_semantic_data == 15)[0]
+            mcyclist_idx = np.where(all_semantic_data == 32)[0]
+            bus_idx = np.where(all_semantic_data == 13)[0]
+            rails_idx = np.where(all_semantic_data == 16)[0]
+            truck_idx = np.where(all_semantic_data == 18)[0]
+            oth_idx = np.where(all_semantic_data == 20)[0]
+            ped_idx = np.where(all_semantic_data == 30)[0]
 
             pred_lab_up = []
             pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, car_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, cycle_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, cyclist_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, mcycle_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, mcyclist_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, bus_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, rails_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, truck_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
-            #pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, oth_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, cycle_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, cyclist_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, mcycle_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, mcyclist_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, bus_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, rails_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, truck_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, oth_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
+            pred_lab_up = cluster(pred_lab_up, all_velo_data, moving_idx, ped_idx, min_distance, min_points, dyn_thresh_percent, thresh_point)
 
             raw_velo_data = np.fromfile(velo_paths[ori_frame_idx], dtype=np.float32).reshape((-1, 4))
             xyz = raw_velo_data[:,:3]
@@ -205,7 +206,7 @@ if __name__ == "__main__":
     def_output_path = os.path.join(root, 'ubuntu', 'downloads', 'kitti-stuff', 'predictions', 'pred_sk-val_2dpass-mos_frames-02_tta-12_sem3') #, 'sequences', ...)
 
     def_min_dist = 0.5
-    def_min_points = 10
+    def_min_points = 1
     def_dyn_thresh_percent = 0.4
     def_thresh_point = 200
 
