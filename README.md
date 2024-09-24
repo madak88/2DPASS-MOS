@@ -31,6 +31,8 @@ The model processes the LiDAR point clouds, which are then passed through two di
 
 - Download the original [2DPASS](https://github.com/yanx27/2DPASS) then modify it as described in the adaptation section.
 - The dependencies will be the same as for the original [2DPASS](https://github.com/yanx27/2DPASS#requirements).
+<br/> &emsp; \+ &nbsp; ``` pip install dbscan ``` for add_semantic.py
+<br/> &emsp; \+ &nbsp; ``` pip install ruamel.yaml ``` for swap_test_valid.py
 - The models were run on the [SemanticKITTI](http://www.semantic-kitti.org/index.html) dataset.
 
 ### Data Preparation
