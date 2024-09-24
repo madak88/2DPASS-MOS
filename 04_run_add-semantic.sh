@@ -26,7 +26,7 @@ if [ -f "$prev_config" ]; then
 fi
 
 if [ "$is_prev" = false ]; then
-    read -p "Enter dataset type [valid, test]: " ds_type
+    read -p "Enter dataset type [val, test]: " ds_type
     read -e -p "Enter the dataset path: " data_path
     read -e -p "Enter the MOS prediction path: " mos_pred_path
     read -e -p "Enter the Semantic prediction path: " sem_pred_path

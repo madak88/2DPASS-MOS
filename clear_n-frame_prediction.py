@@ -35,14 +35,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     ds_type = args.split
-    assert ds_type in ['sk-train', 'sk-val', 'sk-test', 'sk-all', 'ap-val', 'ap-test', 'ap-all']
-    if ds_type == "sk-train":  split = [0,1,2,3,4,5,6,7,9,10]
-    if ds_type == "sk-val":    split = [8]
-    if ds_type == "sk-test":   split = [11,12,13,14,15,16,17,18,19,20,21]
-    if ds_type == "sk-all":    split = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
-    if ds_type == "ap-val":    split = [23,24,25]
-    if ds_type == "ap-test":   split = [22,26]
-    if ds_type == "ap-all":    split = [22,23,24,25,26]
+    assert ds_type in ['train', 'val', 'test', 'all']
+    if ds_type == "train":  split = [0,1,2,3,4,5,6,7,9,10]
+    if ds_type == "val":    split = [8]
+    if ds_type == "test":   split = [11,12,13,14,15,16,17,18,19,20,21]
+    if ds_type == "all":    split = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
 
     for seq_i in split:
         print("SEQUENCE", seq_i)

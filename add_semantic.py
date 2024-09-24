@@ -96,11 +96,11 @@ def main(args):
 
     ds_type = args.split
 
-    assert ds_type in ['sk-train', 'sk-val', 'sk-test', 'sk-all']
-    if ds_type == "sk-train":  split = [0,1,2,3,4,5,6,7,9,10]
-    if ds_type == "sk-val":    split = [8]
-    if ds_type == "sk-test":   split = [11,12,13,14,15,16,17,18,19,20,21]
-    if ds_type == "sk-all":    split = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+    assert ds_type in ['train', 'val', 'test', 'all']
+    if ds_type == "train":  split = [0,1,2,3,4,5,6,7,9,10]
+    if ds_type == "val":    split = [8]
+    if ds_type == "test":   split = [11,12,13,14,15,16,17,18,19,20,21]
+    if ds_type == "all":    split = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
 
 
     for seq_i in split:
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
 # = Default parameters ============================================================================
 
-    def_split = 'sk-val'
+    def_split = 'val'
 
     root = '/home'
     def_data_path = os.path.join(root, 'ubuntu', 'downloads', 'kitti-stuff', 'datasets', 'calib-color-labels-velodyne_all', 'dataset') #, 'sequences', ...)
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Add semantic to MOS")
 
-    parser.add_argument('--split', '-s', type=str, default=def_split, help='DS type: sk-train/sk-val/sk-test/sk-all')
+    parser.add_argument('--split', '-s', type=str, default=def_split, help='DS type: train/val/test/all')
 
     parser.add_argument('--in_dataset', '-id', type=str, default=def_data_path, help='Path for the dataset directory')
     parser.add_argument('--in_moving', '-im', type=str, default=def_moving_path, help='Path for moving labels')
