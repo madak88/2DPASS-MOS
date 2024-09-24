@@ -160,7 +160,7 @@ To further improve the results, there is an "04_run_add-semantic.sh" script avai
 ./04_run_add-semantic.sh
 ```
 
-- **Enter dataset type [valid, test]:** _Type of the predictions_
+- **Enter dataset type [val, test]:** _Type of the predictions_
 - **Enter the dataset path:** _Location of the original SemanticKITTI dataset_
 - **Enter the MOS prediction path:** _Location of the 2DPASS-MOS (cleard) predictions_
 - **Enter the Semantic prediction path:** _Location of the 2DPASS predictions_
